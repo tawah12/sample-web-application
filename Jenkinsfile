@@ -84,7 +84,7 @@
 
 
 
-currentBuild.displayName = "Final_Demo # "+currentBuild.number
+// currentBuild.displayName = "Final_Demo # "+currentBuild.number
 
 
 node {
@@ -94,7 +94,7 @@ node {
         checkout scm
       }
       
-      #Run sonar scan
+//       #Run sonar scan
       stage('Quality Gate Status Check'){
               agent{
       
@@ -120,14 +120,14 @@ node {
                }
             }
 
-#build docker image
+// #build docker image
       stage('Build sample web app Image') {
         sample-web-appImage = docker.build("devtraining/sample-web-app:v1.0.0")
       }
 
 
 
-#Push docker image
+// #Push docker image
       stage('Push backend image') {
           sample-web-appImage.push("${env.BUILD_NUMBER}")
           sample-web-appImage.push()
