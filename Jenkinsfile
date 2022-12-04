@@ -75,8 +75,7 @@
 
 currentBuild.displayName = "Web App_Demo # "+currentBuild.number
 
-pipeline{
-    agent any  
+node{
     def webappImage
     docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
       stage('Clone repo') {
