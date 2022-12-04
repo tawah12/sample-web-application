@@ -76,7 +76,7 @@ pipeline{
 
 		
 		
-#build docker image
+//build docker image
       stage('Build sample web app Image') {
         sample-web-appImage = docker.build("devtraining/sample-web-app:v1.0.0")
       }
