@@ -75,7 +75,7 @@
 
 currentBuild.displayName = "Web App_Demo # "+currentBuild.number
 
-node{
+node {
     def webappImage
     docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
       stage('Clone repo') {
@@ -84,12 +84,12 @@ node{
       stage('Quality Gate Status Check') {
         agent{
             docker{
-            image 'maven'
-            args '-v $HOME/.m2:/root.m2'
-                }
-               }  
-         steps{
-             script{
+               image 'maven'
+               args '-v $HOME/.m2:/root.m2'
+            }
+        }  
+           steps{
+              script{
                 withSonarQubeEnv('sonarserver') {
                 sh "mvn sonar:sonar"
                 timeout(time: 1, unit: 'HOURS'){
@@ -98,7 +98,7 @@ node{
                      error "Pipeline abort due to quality gate failure: ${qg:status}"
                     }
                   }
-		sh "mvn clean install"
+				sh "mvn clean install"
 				  }
 			 }
 		 }
@@ -121,4 +121,4 @@ node{
 	  
 	}
 }
-
+  
