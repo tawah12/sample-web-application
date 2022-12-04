@@ -83,13 +83,13 @@ pipeline{
 
 
 
-#Push docker image
+// Push docker image
       stage('Push backend image') {
       docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" )
           sample-web-appImage.push("${env.BUILD_NUMBER}")
           sample-web-appImage.push()
       }
-#trigger deployment
+// trigger deployment
       stage('Trigger k8s-sample-web-app-deployment') {
                 echo "triggering k8s-sample-web-app-deployment job"
                 build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
