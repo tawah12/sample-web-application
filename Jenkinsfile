@@ -41,41 +41,60 @@ pipeline{
 
 
 
-              stage('build')
-                {
-              steps{
-                  script{
-		 sh 'cp -r ../devops-training@2/target .'
-                   sh 'docker build . -t deekshithsn/devops-training:$Docker_tag'
-		   withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
+//               stage('build')
+//                 {
+//               steps{
+//                   script{
+// 		 sh 'cp -r ../devops-training@2/target .'
+//                    sh 'docker build . -t deekshithsn/devops-training:$Docker_tag'
+// 		   withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
 				    
-				  sh 'docker login -u deekshithsn -p $docker_password'
-				  sh 'docker push deekshithsn/devops-training:$Docker_tag'
-			}
-                       }
-                    }
-                 }
+// 				  sh 'docker login -u deekshithsn -p $docker_password'
+// 				  sh 'docker push deekshithsn/devops-training:$Docker_tag'
+// 			}
+//                        }
+//                     }
+//                  }
 		 
-		stage('ansible playbook'){
-			steps{
-			 	script{
-				    sh '''final_tag=$(echo $Docker_tag | tr -d ' ')
-				     echo ${final_tag}test
-				     sed -i "s/docker_tag/$final_tag/g"  deployment.yaml
-				     '''
-				    ansiblePlaybook become: true, installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml'
-				}
-			}
-		}
+// 		stage('ansible playbook'){
+// 			steps{
+// 			 	script{
+// 				    sh '''final_tag=$(echo $Docker_tag | tr -d ' ')
+// 				     echo ${final_tag}test
+// 				     sed -i "s/docker_tag/$final_tag/g"  deployment.yaml
+// 				     '''
+// 				    ansiblePlaybook become: true, installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml'
+// 				}
+// 			}
+// 		}
 		
 	
 		
-               }
-	       
-	       
-	       
-	      
-    
+//                }
+
+// }
+
+		
+		
+#build docker image
+      stage('Build sample web app Image') {
+        sample-web-appImage = docker.build("devtraining/sample-web-app:v1.0.0")
+      }
+
+
+
+#Push docker image
+      stage('Push backend image') {
+      docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" )
+          sample-web-appImage.push("${env.BUILD_NUMBER}")
+          sample-web-appImage.push()
+      }
+#trigger deployment
+      stage('Trigger k8s-sample-web-app-deployment') {
+                echo "triggering k8s-sample-web-app-deployment job"
+                build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        }
+    }
 }
 
 
