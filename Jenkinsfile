@@ -81,6 +81,7 @@ node {
       stage('Clone repo') {
         checkout scm
       }
+
       stage('Quality Gate Status Check') {
         agent{
             docker{
@@ -88,7 +89,7 @@ node {
                args '-v $HOME/.m2:/root.m2'
             }
         }  
-           steps{
+            steps{
               script{
                 withSonarQubeEnv('sonarserver') {
                 sh "mvn sonar:sonar"
@@ -98,25 +99,25 @@ node {
                      error "Pipeline abort due to quality gate failure: ${qg:status}"
                     }
                   }
-				sh "mvn clean install"
-				  }
-			 }
-		 }
+				         sh "mvn clean install"
+				        }
+			        }
+		        }
       }
 	  
-      stage('Build sample web app image') {
-        webappImage = docker.build("devtraining/sample-web-app:v1.0.0")
-      }
+    //   stage('Build sample web app image') {
+    //     webappImage = docker.build("devtraining/sample-web-app:v1.0.0")
+    //   }
 	  
-      stage('Push sample web app image') {
-          webappImage.push("${env.BUILD_NUMBER}")
-          webappImage.push()
-      }
+    //   stage('Push sample web app image') {
+    //       webappImage.push("${env.BUILD_NUMBER}")
+    //       webappImage.push()
+    //   }
 	  
-	  stage('Trigger ManifestUpdate') {
-                echo "triggering k8s-polling-app-deploymentjob"
-                build job: 'k8s-polling-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
+	  // stage('Trigger ManifestUpdate') {
+    //             echo "triggering k8s-polling-app-deploymentjob"
+    //             build job: 'k8s-polling-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+    //     }
 	  
 	  
 	}
