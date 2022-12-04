@@ -41,20 +41,34 @@ pipeline{
 
 
 
-//               stage('build')
-//                 {
-//               steps{
-//                   script{
-// 		 sh 'cp -r ../devops-training@2/target .'
-//                    sh 'docker build . -t deekshithsn/devops-training:$Docker_tag'
+              stage('Build sample web app Image')
+                {
+              steps{
+                  script{
+                   sh 'docker build . -t devtraining/sample-web-app:$Docker_tag'
 // 		   withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
 				    
 // 				  sh 'docker login -u deekshithsn -p $docker_password'
 // 				  sh 'docker push deekshithsn/devops-training:$Docker_tag'
 // 			}
-//                        }
-//                     }
-//                  }
+                       }
+                    }
+                 }
+		
+              stage('Push backend image')
+                {
+              steps{
+                  script{
+                   sh 'docker build . -t devtraining/sample-web-app:$Docker_tag'
+		   withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
+				    
+				  sh 'docker login -u deekshithsn -p $docker_password'
+				  sh 'docker push deekshithsn/devops-training:$Docker_tag'
+			}
+                       }
+                    }
+                 }
+		
 		 
 // 		stage('ansible playbook'){
 // 			steps{
@@ -76,25 +90,25 @@ pipeline{
 
 		
 		
-//build docker image
-      stage('Build sample web app Image') {
-        sample-web-appImage = docker.build("devtraining/sample-web-app:v1.0.0")
-      }
+// //build docker image
+//       stage('Build sample web app Image') {
+//         sample-web-appImage = docker.build("devtraining/sample-web-app:v1.0.0")
+//       }
 
 
 
-// Push docker image
-      stage('Push backend image') {
-      docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" )
-          sample-web-appImage.push("${env.BUILD_NUMBER}")
-          sample-web-appImage.push()
-      }
-// trigger deployment
-      stage('Trigger k8s-sample-web-app-deployment') {
-                echo "triggering k8s-sample-web-app-deployment job"
-                build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
-    }
+// // Push docker image
+//       stage('Push backend image') {
+//       docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" )
+//           sample-web-appImage.push("${env.BUILD_NUMBER}")
+//           sample-web-appImage.push()
+//       }
+// // trigger deployment
+//       stage('Trigger k8s-sample-web-app-deployment') {
+//                 echo "triggering k8s-sample-web-app-deployment job"
+//                 build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+//         }
+//     }
 }
 
 
