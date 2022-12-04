@@ -71,55 +71,33 @@
 
 
 
+pipeline{
+    agent{
+        docker{
+            image 'maven'
+            args '-v $HOME/.m2:/root.m2'
+         }
+    }  
+      stages{
+        stage('Quality Gate Status Check'){
+           steps{
+                script{
+            withSonarQubeEnv('sonarserver') {
+            sh "mvn sonar:sonar"
+                 }
 
+            timeout(time: 1, unit: 'HOURS'){
+            def qg = waitForQualityGate()
+                if (qg.status != 'OK'){
+                error "Pipeline abort due to quality gate failure: ${qg:status}"
+                }
+                        }
 
-currentBuild.displayName = "Web App_Demo # "+currentBuild.number
-
-node {
-    def webappImage
-    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-      stage('Clone repo') {
-        checkout scm
+                sh "mvn clean install"
+                 }
+           }
+        }
       }
-
-      stage('Quality Gate Status Check') {
-        agent{
-            docker{
-               image 'maven'
-               args '-v $HOME/.m2:/root.m2'
-            }
-        }  
-            steps{
-              script{
-                withSonarQubeEnv('sonarserver') {
-                sh "mvn sonar:sonar"
-                timeout(time: 1, unit: 'HOURS'){
-                def qg = waitForQualityGate()
-                    if (qg.status != 'OK'){
-                     error "Pipeline abort due to quality gate failure: ${qg:status}"
-                    }
-                  }
-				         sh "mvn clean install"
-				        }
-			        }
-		        }
-      }
-	  
-    //   stage('Build sample web app image') {
-    //     webappImage = docker.build("devtraining/sample-web-app:v1.0.0")
-    //   }
-	  
-    //   stage('Push sample web app image') {
-    //       webappImage.push("${env.BUILD_NUMBER}")
-    //       webappImage.push()
-    //   }
-	  
-	  // stage('Trigger ManifestUpdate') {
-    //             echo "triggering k8s-polling-app-deploymentjob"
-    //             build job: 'k8s-polling-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-    //     }
-	  
-	  
-	}
 }
-  
+
+
