@@ -69,7 +69,7 @@
 // }
 
 
-currentBuild.displayName = "Web App_Demo # "+currentBuild.number
+currentBuild.displayName = "Web App Demo # "+currentBuild.number
 
    def getDockerTag(){
         def tag = sh script: 'git rev-parse HEAD', returnStdout: true
