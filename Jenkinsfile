@@ -110,7 +110,7 @@ pipeline{
                   script{
               //sh 'docker build . -t devtraining/sample-web-app:$Docker_tag'
 		    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-              sh 'docker build -t devtraining/sample-web-app:$Docker_tag'				    
+              sh 'docker build -t devtraining/sample-web-app:$Docker_tag .'				    
 				  //sh 'docker login -u deekshithsn -p $docker_password'
 				      //sh 'docker push devtraining/sample-web-app:$Docker_tag'
 			          }
