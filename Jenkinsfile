@@ -114,6 +114,7 @@ pipeline{
 				  //sh 'docker login -u deekshithsn -p $docker_password'
 				      //sh 'docker push devtraining/sample-web-app:$Docker_tag'
 			          }
+		  }
            }
        }
         
