@@ -108,16 +108,24 @@ pipeline{
         stage('Build Web app image') {
             steps{
                   script{
-              //sh 'docker build . -t devtraining/sample-web-app:$Docker_tag'
 		    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-              sh 'docker build -t devtraining/sample-web-app .'				    
-				  //sh 'docker login -u deekshithsn -p $docker_password'
-				      //sh 'docker push devtraining/sample-web-app:$Docker_tag'
+              sh 'docker build -t devtraining/sample-web-app:$Docker_tag .'				    
 			          }
-		  }
+		          }
            }
        }
         
+        stage('Push Web app image') {
+            steps{
+                  script{
+		    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+              sh 'docker push devtraining/sample-web-app:${env.BUILD_NUMBER}'
+              sh 'docker push devtraining/sample-web-app:$Docker_tag'			    
+			          }
+		          }
+           }
+       }
+
 
 
       }
