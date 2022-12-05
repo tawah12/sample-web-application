@@ -67,12 +67,13 @@ node {
   stage('Clone repo') {
         checkout scm
       }
-  stage('build & SonarQube Scan') {
-    withSonarQubeEnv('sonarserver') {
-      sh 'mvn sonar:sonar'
-    } // SonarQube taskId is automatically attached to the pipeline context
-  }
-}
+  stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('sonarserver') {
+                    sh "mvn sonar:sonar"
+                }
+            }
+        }
  
 // No need to occupy a node
 stage("Quality Gate") {
