@@ -66,31 +66,23 @@
 // TESTING PIPELINE
 // TESTING PIPELINE START HERE
 
-pipeline {
-    agent any
-    stages {
-       //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+node {
+    def clientImage
+    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
        stage('Clone repo') {
-	     steps{
-		  scripts{
-         		checkout scm
-		  }
-	     }
-       }
-		
-        stage('SonarQube analysis') {
+          checkout scm
+      }
+       stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonarserver') {
                     sh "mvn sonar:sonar"
                 }
             }
         }
-        stage("Quality gate") {
+       stage("Quality gate") {
             steps {
                 waitForQualityGate abortPipeline: true
             }
         }
     }
 }
-}
-//}
