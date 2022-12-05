@@ -57,8 +57,10 @@ pipeline{
 
       }
       stage('Trigger ManifestUpdate') {
+	      script{
                 echo "triggering k8s-polling-app-deploymentjob"
                 build job: 'k8s-polling-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+	      }
         }
    }
 }
