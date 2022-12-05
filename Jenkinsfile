@@ -68,7 +68,7 @@ node {
         checkout scm
       }
   stage('build & SonarQube Scan') {
-    withSonarQubeEnv('sonarerver') {
+    withSonarQubeEnv('sonarserver') {
       sh 'mvn clean package sonar:sonar'
     } // SonarQube taskId is automatically attached to the pipeline context
   }
