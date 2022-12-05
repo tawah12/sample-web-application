@@ -67,8 +67,15 @@
 // TESTING PIPELINE START HERE
 
 pipeline {
-    def clientImage
-    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+        agent{
+		def clientImage
+    		docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+        docker{
+            image 'maven'
+            args '-v $HOME/.m2:/root.m2'
+         }
+    }
+    
     stages{
         stage('Clone repo') {
           checkout scm
@@ -99,3 +106,4 @@ pipeline {
     }
 }
 }
+
