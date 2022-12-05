@@ -89,7 +89,7 @@ pipeline{
         stages{
 
 
-              stage('Quality Gate Statuc Check'){
+              stage('SonaQube Quality Gate Statuc Check'){
 
                agent {
                 docker {
@@ -108,58 +108,57 @@ pipeline{
                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
                       }
                     }
-		    sh "mvn clean install"
+		    //sh "mvn clean install"
                   }
                 }  
               }
 
-
-
-              stage('build')
+              stage('Build Maven App')
                 {
               steps{
                   script{
-		 //sh 'cp -r ../devops-training@2/target .'
-                   //sh 'docker build . -t devtraining/sample-web-app:$Docker_tag'
+		   sh "mvn clean install"
+		   //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+		   //sh 'docker build . -t devtraining/sample-web-app:${BUILD_NUMBER}'
+			}
+                       }
+                    }
+                 }
+
+
+              stage('Build Web App'){
+              steps{
+                  script{
 		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
 		   sh 'docker build . -t devtraining/sample-web-app:${BUILD_NUMBER}'
-				    
-				  //sh 'docker login -u deekshithsn -p $docker_password'
-				  //sh 'docker push devtraining/sample-web-app:$Docker_tag'
 			}
                        }
                     }
                  }
 		 
 		
-              stage('push')
-                {
+              stage('Push Web App'){
               steps{
                   script{
-		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-                   sh 'docker push devtraining/sample-web-app:${env.BUILD_NUMBER}'
-				  //sh 'docker login -u deekshithsn -p $docker_password'
-				  //sh 'docker push devtraining/sample-web-app:$Docker_tag'
-			}
+		   //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+                   sh 'docker push devtraining/sample-web-app:${BUILD_NUMBER}'
+			//}
                        }
                     }
                  }
 		 
 		stage('ansible playbook'){
-			steps{
-			 	script{
-				    sh '''final_tag=$(echo $Docker_tag | tr -d ' ')
-				     echo ${final_tag}test
-				     sed -i "s/docker_tag/$final_tag/g"  deployment.yaml
-				     '''
-				    ansiblePlaybook become: true, installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml'
-				}
-			}
+		steps{
+		    script{
+		      echo "triggering k8s-sample-web-app-deployment job"
+		    build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+		    }
 		}
-		
+		}
+
 	
-		
-               }
+
+        }
 	       
 	       
 	       
