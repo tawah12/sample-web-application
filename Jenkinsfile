@@ -132,7 +132,7 @@ pipeline{
                   script{
 		   //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
 		   sh 'docker build . -t devtraining/sample-web-app:${BUILD_NUMBER}'
-						}
+						//}
                        }
                     }
                  }
@@ -143,7 +143,7 @@ pipeline{
                   script{
 		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
                    sh 'docker push devtraining/sample-web-app:${BUILD_NUMBER}'
-			//}
+			}
                        }
                     }
                  }
