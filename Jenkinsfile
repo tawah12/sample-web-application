@@ -69,17 +69,28 @@
 node {
     def clientImage
     docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-       stage('Clone repo') {
+        stage('Clone repo') {
           checkout scm
       }
-       stage('SonarQube analysis') {
-          steps {
-              withSonarQubeEnv('sonarserver') {
-				sh "mvn sonar:sonar"
-		      }
-          }
-       }
-       stage("Quality gate") {
+        stage('Quality Gate Status Check'){
+           steps{
+                script{
+            withSonarQubeEnv('sonarserver') {
+            sh "mvn sonar:sonar"
+                 }
+
+            timeout(time: 1, unit: 'HOURS'){
+            def qg = waitForQualityGate()
+                if (qg.status != 'OK'){
+                error "Pipeline abort due to quality gate failure: ${qg:status}"
+                }
+                        }
+
+                //sh "mvn clean install"
+                 }
+           }
+        }
+        stage("Quality gate") {
            steps {
                waitForQualityGate abortPipeline: true
             }
