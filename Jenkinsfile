@@ -21,8 +21,8 @@ pipeline{
                 if (qg.status != 'OK'){
                 error "Pipeline abort due to quality gate failure: ${qg:status}"
                 }
-                        }
-                 }
+               }
+              }
            }
         }
         stage('Maven build'){
