@@ -120,7 +120,7 @@ pipeline{
                   script{
 		    //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
               sh 'docker push devtraining/sample-web-app:${env.BUILD_NUMBER}'
-              sh 'docker push devtraining/sample-web-app:$Docker_tag'			    
+              //sh 'docker push devtraining/sample-web-app:$Docker_tag'			    
 			          
 		          }
            }
