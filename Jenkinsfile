@@ -93,11 +93,21 @@ pipeline{
                 }
                         }
 
-                sh "mvn clean install"
+                //sh "mvn clean install"
                  }
            }
         }
+        stage('Maven build'){
+           steps{
+                script{
+            sh "mvn clean install"
+                 }
+           }
+        }
+
+
       }
+   
 }
 
 
