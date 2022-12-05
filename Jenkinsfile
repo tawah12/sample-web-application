@@ -114,7 +114,7 @@ pipeline{
             steps{
                   script{
 		    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-              sh 'docker build -t devtraining/sample-web-app:$Docker_tag .'				    
+              sh 'docker build -t devtraining/sample-web-app:${env.BUILD_NUMBER} .'				    
 			          }
 		          }
            }
@@ -124,8 +124,8 @@ pipeline{
             steps{
                   script{
 		    //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-              //sh 'docker push devtraining/sample-web-app:${env.BUILD_NUMBER}'
-              sh 'docker push devtraining/sample-web-app:$Docker_tag'			    
+              sh 'docker push devtraining/sample-web-app:${env.BUILD_NUMBER}'
+              //sh 'docker push devtraining/sample-web-app:$Docker_tag'			    
 			          
 		          }
            }
