@@ -69,7 +69,12 @@
 // }
 
 
+currentBuild.displayName = "Web App_Demo # "+currentBuild.number
 
+   def getDockerTag(){
+        def tag = sh script: 'git rev-parse HEAD', returnStdout: true
+        return tag
+        }
 
 pipeline{
     agent{
@@ -109,7 +114,7 @@ pipeline{
             steps{
                   script{
 		    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-              sh 'docker build -t devtraining/sample-web-app .'				    
+              sh 'docker build -t devtraining/sample-web-app:$Docker_tag .'				    
 			          }
 		          }
            }
