@@ -69,7 +69,7 @@
 pipeline {
     agent any
     stages {
-       docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+       //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
        stage('Clone repo') {
          checkout scm
 		
@@ -88,4 +88,4 @@ pipeline {
     }
 }
 }
-}
+//}
