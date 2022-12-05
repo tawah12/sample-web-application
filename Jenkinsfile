@@ -71,7 +71,6 @@
 
 
 
-
 currentBuild.displayName = "Web_App_Demo # "+currentBuild.number
 
    def getDockerTag(){
@@ -87,8 +86,6 @@ pipeline{
         }
         
         stages{
-
-
               stage('SonaQube Quality Gate Statuc Check'){
 
                agent {
@@ -113,14 +110,13 @@ pipeline{
                 }  
               }
 
-              stage('Build Maven App')
-                {
+              stage('Build Maven App'){
               steps{
                   script{
 		   sh "mvn clean install"
 		   //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
 		   //sh 'docker build . -t devtraining/sample-web-app:${BUILD_NUMBER}'
-			}
+			//}
                        }
                     }
                  }
@@ -131,7 +127,7 @@ pipeline{
                   script{
 		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
 		   sh 'docker build . -t devtraining/sample-web-app:${BUILD_NUMBER}'
-			}
+						}
                        }
                     }
                  }
@@ -163,10 +159,6 @@ pipeline{
 	       
    
 }
-
-
-
-
 
 
 
