@@ -77,10 +77,6 @@ currentBuild.displayName = "Web App_Demo # "+currentBuild.number
 //         }
 
 pipeline{
-    def getDockerTag(){
-        def tag = sh script: 'git rev-parse HEAD', returnStdout: true
-        return tag
-        }
     agent{
         docker{
             image 'maven'
@@ -118,7 +114,7 @@ pipeline{
             steps{
                   script{
 		    docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-              sh 'docker build -t devtraining/sample-web-app ${env.BUILD_NUMBER} .'				    
+              sh 'docker build -t devtraining/sample-web-app .'				    
 			          }
 		          }
            }
@@ -129,7 +125,7 @@ pipeline{
                   script{
 		    //docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
               sh 'docker push devtraining/sample-web-app:${env.BUILD_NUMBER}'
-              //sh 'docker push devtraining/sample-web-app:$Docker_tag'			    
+              //sh 'docker push devtraining/sample-web-app:latest'			    
 			          
 		          }
            }
