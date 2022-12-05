@@ -80,7 +80,12 @@ currentBuild.displayName = "Web_App_Demo # "+currentBuild.number
         
 
 pipeline{
-        agent any  
+        agent {
+		docker {
+          		image 'maven'
+          		args '-v $HOME/.m2:/root/.m2'
+          	}
+            } 
         environment{
 	    Docker_tag = getDockerTag()
         }
@@ -88,12 +93,12 @@ pipeline{
         stages{
               stage('SonaQube Quality Gate Statuc Check'){
 
-               agent {
-                docker {
-                image 'maven'
-                args '-v $HOME/.m2:/root/.m2'
-                }
-            }
+//                agent {
+//                 docker {
+//                 image 'maven'
+//                 args '-v $HOME/.m2:/root/.m2'
+//                 }
+//             }
                   steps{
                       script{
                       withSonarQubeEnv('sonarserver') { 
