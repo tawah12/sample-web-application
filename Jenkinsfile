@@ -69,6 +69,7 @@
 pipeline {
     def clientImage
     docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+    stages{
         stage('Clone repo') {
           checkout scm
       }
