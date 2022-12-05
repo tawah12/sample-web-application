@@ -74,9 +74,11 @@ node {
       }
        stage('SonarQube analysis') {
             steps {
+		    scripts{
                 withSonarQubeEnv('sonarserver') {
-                    sh "mvn sonar:sonar"
+                sh "mvn sonar:sonar"
                 }
+		}
             }
         }
        stage("Quality gate") {
