@@ -66,7 +66,7 @@
 // TESTING PIPELINE
 // TESTING PIPELINE START HERE
 
-node {
+pipeline {
     def clientImage
     docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
         stage('Clone repo') {
