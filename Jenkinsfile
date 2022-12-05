@@ -59,8 +59,8 @@ pipeline{
       stage('Trigger ManifestUpdate') {
 	    steps{
 		script{
-		  echo "triggering k8s-polling-app-deploymentjob"
-             build job: 'k8s-polling-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+		  echo "triggering k8s-sample-web-app-deployment job"
+             build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
 	      }
           }
        }
