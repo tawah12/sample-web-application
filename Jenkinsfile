@@ -73,17 +73,15 @@ node {
           checkout scm
       }
        stage('SonarQube analysis') {
-            steps {
-		    scripts{
-                withSonarQubeEnv('sonarserver') {
-                sh "mvn sonar:sonar"
-                }
-		}
-            }
-        }
+          steps {
+              withSonarQubeEnv('sonarserver') {
+				sh "mvn sonar:sonar"
+		      }
+          }
+       }
        stage("Quality gate") {
-            steps {
-                waitForQualityGate abortPipeline: true
+           steps {
+               waitForQualityGate abortPipeline: true
             }
         }
     }
