@@ -124,7 +124,21 @@ pipeline{
 		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
 				    
 				  //sh 'docker login -u deekshithsn -p $docker_password'
-				  sh 'docker push devtraining/sample-web-app:$Docker_tag'
+				  //sh 'docker push devtraining/sample-web-app:$Docker_tag'
+			}
+                       }
+                    }
+                 }
+		 
+		
+              stage('push')
+                {
+              steps{
+                  script{
+		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
+                   sh 'docker push . -t devtraining/sample-web-app:$Docker_tag'
+				  //sh 'docker login -u deekshithsn -p $docker_password'
+				  //sh 'docker push devtraining/sample-web-app:$Docker_tag'
 			}
                        }
                     }
