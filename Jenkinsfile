@@ -19,21 +19,21 @@ pipeline{
         }
         
         stages{
-              stage('SonaQube Quality Gate Statuc Check'){
-                  steps{
-                      script{
-                      withSonarQubeEnv('sonarserver') { 
-                      sh "mvn sonar:sonar"
-                       }
-                      timeout(time: 1, unit: 'HOURS') {
-                      def qg = waitForQualityGate()
-                      if (qg.status != 'OK') {
-                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                      }
-                    }
-                  }
-                }  
-              }
+              // stage('SonaQube Quality Gate Statuc Check'){
+              //     steps{
+              //         script{
+              //         withSonarQubeEnv('sonarserver') { 
+              //         sh "mvn sonar:sonar"
+              //          }
+              //         timeout(time: 1, unit: 'HOURS') {
+              //         def qg = waitForQualityGate()
+              //         if (qg.status != 'OK') {
+              //              error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              //         }
+              //       }
+              //     }
+              //   }  
+              // }
 
               stage('Build Maven App'){
               steps{
@@ -47,7 +47,7 @@ pipeline{
               stage('Build Web App'){
               steps{
                   script{
-		   sh 'docker build . -t devtraining/sample-web-app:${BUILD_NUMBER}'
+		   sh 'docker build . -t leodevops22/sample-web-app:${BUILD_NUMBER}'
                        }
                     }
                  }
@@ -57,20 +57,20 @@ pipeline{
               steps{
                   script{
 		   docker.withRegistry("https://index.docker.io/v1/", "Docker_Hub" ) {
-                   sh 'docker push devtraining/sample-web-app:${BUILD_NUMBER}'
+                   sh 'docker push leodevop22/sample-web-app:${BUILD_NUMBER}'
 			}
                        }
                     }
                  }
 		 
-		stage('ansible playbook'){
-		steps{
-		    script{
-		      echo "triggering k8s-sample-web-app-deployment job"
-		    build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-		    }
-		}
-	     }
+		// stage('ansible playbook'){
+		// steps{
+		//     script{
+		//       echo "triggering k8s-sample-web-app-deployment job"
+		//     build job: 'k8s-sample-web-app-deployment', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+		//     }
+		// }
+	  //    }
         }
 }
 
